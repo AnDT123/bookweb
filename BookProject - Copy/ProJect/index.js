@@ -1,9 +1,8 @@
-const scrollContainer = document.querySelector(".nav-bar");
+const navContainer = document.querySelector(".nav-bar");
 const autoBox = document.querySelector('.auto-complete-box')
 const readPage = document.querySelector('.read-page');
 const backButton= document.querySelector('.backButton')
 const inputField = document.querySelector('.search-input')
-const navContainer = document.querySelector('.nav-bar')
 const mainContainer = document.querySelector('.main-books')
 bookDataMain = [...bookData1,...bookData2]
 booksName = bookDataMain.map(book => book.Name.trim())
@@ -47,7 +46,35 @@ function showBooksHint(booklist) {
       autoBox.innerHTML = `<li class = "no-result" >No result...</li>`
     }
 }
+// Drag To Scroll Nav Bar------------------
+let startX;
+let scrollLeft;
+let isDown = false;
+let isMoving = false;   // IF THE MOUSE IS MOVING IN THE NAV BAR
+ navContainer.addEventListener("mousedown", (e)=>{
+  isDown = true;
+  startX = e.pageX- navContainer.offsetLeft;
+  scrollLeft = navContainer.scrollLeft
 
+
+ })
+ navContainer.addEventListener("mousemove", (e)=>{
+    if(!isDown) return;
+    isMoving = true
+    const x = e.pageX- navContainer.offsetLeft;
+    const walk = x- startX;
+    navContainer.scrollLeft = scrollLeft - walk
+
+ })
+ navContainer.addEventListener("mouseup", ()=>{
+  isDown = false;
+  isMoving = false;
+
+ })
+ navContainer.addEventListener("mouseleave", ()=>{
+  isDown = false;
+  isMoving = false;
+ })
 
 
 // RENDER NAVBAR
@@ -56,7 +83,7 @@ bookData1.forEach((item,index) =>{
     navItem.classList.add('nav-bar__item','data-index');
     navItem.setAttribute('data-index',index)
     navItem.innerHTML = `
-    <img src="Assets/data_book/data_new/image_book/${index+1}.png" alt="" class="nav-item__img clickToRead">
+    <img src="Assets/data_book/data_new/image_book/${index+1}.png" alt="" class="nav-item__img clickToRead" draggable="false">
     <div class="nav-item__name clickToRead ">${item.Name}</div>
     <div class="nav-item__author clickToRead">${item.Author}</div>
     `
@@ -102,25 +129,26 @@ bookDataMain.forEach((item,index) =>{
 const clickToReads = document.querySelectorAll('.clickToRead');
 
 // HORIONTAL SCROLL
-scrollContainer.addEventListener("wheel", (evt) => {
+navContainer.addEventListener("wheel", (evt) => {
   evt.preventDefault();
-  scrollContainer.scrollLeft += evt.deltaY / 2;
+  navContainer.scrollLeft += evt.deltaY / 2;
 
 });
 // RENDER READ PAGE
 function editAndShowReadPage() {
-  
+    if(!isMoving) {
     var bookIndex = this.closest(".data-index")
     var index = +bookIndex.getAttribute('data-index')
  
   
-    renderReadPage(index)
+    renderReadPage(index)}
   
 
   
   
 }
 function renderReadPage(index) {
+  
   const {Name,Author,Description,Publisher} = bookDataMain[index]
   readPage.innerHTML = `
   <i class="fas fa-chevron-left backButton"></i>
