@@ -89,6 +89,9 @@ body{
     
     
 }
+.nav-bar::-webkit-scrollbar{
+    display: none;
+}
 .nav-bar__item{
     width:30vw;
     border: 3px solid var(--bar-color);
