@@ -84,7 +84,7 @@ body{
 }
 .nav-bar{
     display: flex;
-    overflow-x: hidden;
+    overflow-x: scroll;
     margin: 20px 0 20px 0;
     
     
